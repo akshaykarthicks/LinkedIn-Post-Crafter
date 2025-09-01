@@ -1,8 +1,7 @@
-
 import React from 'react';
-import PostCrafter from './components/PostCrafter';
+import PostCrafter from '../components/PostCrafter';
 
-const App: React.FC = () => {
+const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-brand-gray-50 to-brand-gray-100 text-brand-gray-900 font-sans">
       <main className="container mx-auto px-4 py-8 md:py-16">
@@ -30,4 +29,4 @@ const HeroSection: React.FC = () => (
   </header>
 );
 
-export default App;
+export default HomePage;
