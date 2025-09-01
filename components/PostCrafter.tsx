@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { ContentGoal, Tone, UserInputs } from '../types';
 import { GOALS, TONES, GOAL_INPUT_MAP } from '../constants';
-import { generateLinkedInPost } from '../services/geminiService';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { ClipboardIcon } from './icons/ClipboardIcon';
 import { CheckIcon } from './icons/CheckIcon';
@@ -50,8 +49,25 @@ const PostCrafter: React.FC = () => {
         setGeneratedPost('');
 
         try {
-            const post = await generateLinkedInPost(selectedGoal, userInputs, selectedTone);
-            setGeneratedPost(post);
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    goal: selectedGoal,
+                    inputs: userInputs,
+                    tone: selectedTone,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'An unexpected error occurred.');
+            }
+
+            const data = await response.json();
+            setGeneratedPost(data.post);
             setStep('result');
         } catch (err: any) {
             setError(err.message || 'An unexpected error occurred.');
